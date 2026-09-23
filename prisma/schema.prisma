@@ -7,54 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum EnrollmentStatus {
+enum ApplicationStatus {
   CONFIRMED
   WAITLISTED
 }
 
-model Study {
-  id              String       @id @default(cuid())
-  title           String
-  description     String
-  startDate       DateTime
-  location        String
-  category        String
-  maxParticipants Int
-  createdAt       DateTime     @default(now())
-  enrollments     Enrollment[]
+model Program {
+  id             String        @id @default(cuid())
+  name           String
+  description    String
+  startDate      DateTime
+  endDate        DateTime
+  category       String
+  capacity       Int
+  createdAt      DateTime      @default(now())
+  applications   Application[]
 }
 
-model Participant {
-  id          String       @id @default(cuid())
-  name        String
-  email       String       @unique
-  createdAt   DateTime     @default(now())
-  enrollments Enrollment[]
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  createdAt    DateTime      @default(now())
+  applications Application[]
 }
 
-model Enrollment {
-  id            String           @id @default(cuid())
-  studyId       String
-  participantId String
-  status        EnrollmentStatus @default(CONFIRMED)
-  createdAt     DateTime         @default(now())
-  study         Study            @relation(fields: [studyId], references: [id], onDelete: Cascade)
-  participant   Participant      @relation(fields: [participantId], references: [id], onDelete: Cascade)
-  measurements  Measurement[]
+model Application {
+  id        String            @id @default(cuid())
+  programId String
+  userId    String
+  status    ApplicationStatus @default(CONFIRMED)
+  createdAt DateTime          @default(now())
+  program   Program           @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([studyId, participantId])
-  @@index([studyId])
-  @@index([participantId])
+  @@unique([programId, userId])
+  @@index([programId])
+  @@index([userId])
 }
 
-model Measurement {
-  id           String     @id @default(cuid())
-  enrollmentId String
-  metric       String
-  value        Float
-  unit         String
-  measuredAt   DateTime   @default(now())
-  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
-
-  @@index([enrollmentId])
-}

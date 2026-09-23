@@ -1,8 +1,10 @@
-# StudyFlow
+# PublicFlow
 
-StudyFlow est une application pédagogique permettant de consulter des études cliniques et de gérer les inscriptions de participants.
+PublicFlow est une application pédagogique permettant de consulter des dispositifs d'accompagnement public et de déposer des demandes.
 
 Le projet sert de support aux ateliers de développement avec l'IA.
+
+Les fonctionnalités de l'application seront construites progressivement à partir de User Stories, en utilisant un agent IA de développement.
 
 ## Stack
 
@@ -20,9 +22,10 @@ Après avoir cloné le dépôt :
 ```bash
 npm install
 ```
+
 ## Configuration
 
-Créez un fichier `.env` à la racine du projet avec :
+Créer un fichier `.env` à la racine du projet avec :
 
 ```env
 DATABASE_URL="file:./dev.db"
@@ -32,10 +35,15 @@ DATABASE_URL="file:./dev.db"
 
 Le projet utilise SQLite avec Prisma.
 
-Pour initialiser la base de données et charger les données de test :
+Pour initialiser la base de données :
 
 ```bash
 npm run db:migrate
+```
+
+Les données de démonstration pourront ensuite être chargées avec :
+
+```bash
 npm run db:seed
 ```
 
@@ -49,9 +57,11 @@ npm run dev
 
 Puis ouvrir :
 
+```text
 http://localhost:3000
+```
 
-Si le port 3000 est déjà utilisé, Next.js proposera automatiquement un autre port. Utilisez alors l'adresse indiquée dans le terminal.
+Si le port 3000 est déjà utilisé, Next.js proposera automatiquement un autre port. Utiliser alors l'adresse indiquée dans le terminal.
 
 ## Vérifications
 
@@ -67,18 +77,24 @@ Pour construire l'application :
 npm run build
 ```
 
-> Pendant les ateliers, ne lancez pas systématiquement `npm run lint` ou `npm run build` après chaque modification. Ces commandes servent principalement aux vérifications finales.
+> Pendant le workshop, ne pas lancer systématiquement `npm run lint` ou `npm run build` après chaque modification. Ces commandes servent principalement aux vérifications finales.
 
 ## Structure
 
 Les principaux éléments du projet sont :
 
-* `app/` — pages et composants de l'application
+* `app/` — pages et routes de l'application
+* `components/` — composants React réutilisables
+* `lib/` — logique applicative
 * `prisma/schema.prisma` — modèle de données
 * `prisma/migrations/` — migrations de la base de données
-* `prisma/seed.ts` — données de test
+* `prisma/seed.ts` — données de démonstration
 * `public/` — fichiers statiques
 
-## Données de test
+## Workshop
 
-La base de données contient des études, des participants et des inscriptions permettant de tester les principales fonctionnalités de l'application.
+Le projet démarre volontairement avec un socle technique minimal.
+
+Les fonctionnalités seront développées progressivement à partir de User Stories, avec une démarche :
+
+**Contexte → User Story → Agent → Test → Observation → Itération → Validation**

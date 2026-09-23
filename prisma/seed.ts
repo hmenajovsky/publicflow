@@ -1,11 +1,12 @@
-import { PrismaClient, EnrollmentStatus } from '@prisma/client'
 
-const prisma = new PrismaClient()
+import { PrismaClient, ApplicationStatus } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.enrollment.deleteMany()
-  await prisma.participant.deleteMany()
-  await prisma.study.deleteMany()
+  await prisma.application.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.program.deleteMany();
 
   const inDays = (days: number) => {
     const d = new Date();
@@ -13,139 +14,193 @@ async function main() {
     return d;
   };
 
-  const studies = await Promise.all(
+  const programs = await Promise.all(
     [
       {
-        title: 'Efficacité d\'un nouveau traitement contre la migraine',
+        name: "Accompagnement à la création d'entreprise",
         description:
-          'Étude randomisée en double aveugle comparant un nouveau traitement aux soins standards.',
-        startDate: new Date('2026-10-15'),
-        location: 'Paris',
-        category: 'Neurologie',
-        maxParticipants: 60,
-      },
-      {
-        title: 'Impact de l\'activité physique sur la tension artérielle',
-        description:
-          'Suivi de 6 mois mesurant l\'effet d\'un programme d\'exercice sur l\'hypertension.',
-        startDate: new Date('2026-11-01'),
-        location: 'Lyon',
-        category: 'Cardiologie',
-        maxParticipants: 2,
-      },
-      {
-        title: 'Évaluation d\'un nouveau vaccin contre la grippe saisonnière',
-        description:
-          'Essai clinique de phase 2 évaluant l\'innocuité et l\'immunogénicité du candidat vaccin.',
-        startDate: new Date('2026-12-05'),
-        location: 'Bordeaux',
-        category: 'Vaccination',
-        maxParticipants: 300,
-      },
-      {
-        title: 'Étude de biodisponibilité d\'une molécule antidiabétique',
-        description:
-          'Mesure des paramètres pharmacocinétiques d\'un nouveau comprimé à libération prolongée.',
-        startDate: new Date('2027-01-20'),
-        location: 'Lille',
-        category: 'Métabolisme',
-        maxParticipants: 24,
-      },
-      {
-        title: 'Traitement adjuvant du mélanome de stade précoce',
-        description:
-          'Comparaison de deux schémas thérapeutiques adjuvants après exérèse chirurgicale.',
-        startDate: new Date('2027-02-10'),
-        location: 'Marseille',
-        category: 'Oncologie',
-        maxParticipants: 120,
-      },
-      {
-        title: 'Observance d\'un traitement antihypertenseur en ville',
-        description:
-          'Étude observationnelle mesurant l\'observance thérapeutique à l\'aide d\'un carnet numérique.',
+          "Dispositif d'accompagnement destiné aux personnes souhaitant créer leur entreprise.",
         startDate: inDays(3),
-        location: 'Nantes',
-        category: 'Cardiologie',
-        maxParticipants: 80,
+        endDate: inDays(10),
+        category: "Entrepreneuriat",
+        capacity: 20,
       },
       {
-        title: 'Télémédecine pour le suivi du diabète de type 2',
+        name: "Formation aux métiers du numérique",
         description:
-          'Étude évaluant l\'impact d\'un suivi par télémédecine sur l\'équilibre glycémique.',
-        startDate: inDays(15),
-        location: 'Toulouse',
-        category: 'Métabolisme',
-        maxParticipants: 150,
-      },
-      {
-        title: 'Atelier : suivi des indices corporels',
-        description:
-          'Jeu de données simplifié pour l\'atelier : suivi du poids (kg) et de la taille (cm) de participants fictifs.',
+          "Programme de formation destiné aux personnes souhaitant développer leurs compétences numériques.",
         startDate: inDays(8),
-        location: 'Grenoble',
-        category: 'Nutrition',
-        maxParticipants: 10,
+        endDate: inDays(30),
+        category: "Formation",
+        capacity: 2,
       },
-    ].map((data) => prisma.study.create({ data })),
-  )
+      {
+        name: "Aide à la mobilité professionnelle",
+        description:
+          "Dispositif permettant d'accompagner les personnes dans un projet de mobilité professionnelle.",
+        startDate: inDays(15),
+        endDate: inDays(45),
+        category: "Emploi",
+        capacity: 50,
+      },
+      {
+        name: "Accompagnement vers l'emploi",
+        description:
+          "Programme d'accompagnement personnalisé pour faciliter le retour à l'emploi.",
+        startDate: inDays(25),
+        endDate: inDays(60),
+        category: "Emploi",
+        capacity: 30,
+      },
+      {
+        name: "Atelier découverte des métiers",
+        description:
+          "Atelier permettant de découvrir différents métiers et secteurs professionnels.",
+        startDate: inDays(35),
+        endDate: inDays(36),
+        category: "Orientation",
+        capacity: 15,
+      },
+      {
+        name: "Soutien aux projets associatifs",
+        description:
+          "Dispositif d'accompagnement destiné aux associations développant un nouveau projet.",
+        startDate: inDays(50),
+        endDate: inDays(80),
+        category: "Vie associative",
+        capacity: 10,
+      },
+      {
+        name: "Programme d'accompagnement des jeunes",
+        description:
+          "Accompagnement destiné aux jeunes dans leurs démarches d'insertion professionnelle.",
+        startDate: inDays(65),
+        endDate: inDays(100),
+        category: "Jeunesse",
+        capacity: 40,
+      },
+      {
+        name: "Atelier numérique pour les seniors",
+        description:
+          "Atelier pratique pour développer l'autonomie dans l'utilisation des outils numériques.",
+        startDate: inDays(8),
+        endDate: inDays(9),
+        category: "Numérique",
+        capacity: 10,
+      },
+    ].map((data) => prisma.program.create({ data })),
+  );
 
-  const participants = await Promise.all(
+  const users = await Promise.all(
     [
-      { name: 'Camille Dupont', email: 'camille.dupont@example.com' },
-      { name: 'Lucas Martin', email: 'lucas.martin@example.com' },
-      { name: 'Emma Bernard', email: 'emma.bernard@example.com' },
-      { name: 'Hugo Petit', email: 'hugo.petit@example.com' },
-      { name: 'Léa Robert', email: 'lea.robert@example.com' },
-      { name: 'Nathan Richard', email: 'nathan.richard@example.com' },
-      { name: 'Marie Leroy', email: 'marie.leroy@example.com' },
-      { name: 'Thomas Moreau', email: 'thomas.moreau@example.com' },
-      { name: 'Sofia Rossi', email: 'sofia.rossi@example.com' },
-      { name: 'Julien Garnier', email: 'julien.garnier@example.com' },
-    ].map((data) => prisma.participant.create({ data })),
-  )
+      { name: "Camille Dupont", email: "camille.dupont@example.com" },
+      { name: "Lucas Martin", email: "lucas.martin@example.com" },
+      { name: "Emma Bernard", email: "emma.bernard@example.com" },
+      { name: "Hugo Petit", email: "hugo.petit@example.com" },
+      { name: "Léa Robert", email: "lea.robert@example.com" },
+      { name: "Nathan Richard", email: "nathan.richard@example.com" },
+      { name: "Marie Leroy", email: "marie.leroy@example.com" },
+      { name: "Thomas Moreau", email: "thomas.moreau@example.com" },
+      { name: "Sofia Rossi", email: "sofia.rossi@example.com" },
+      { name: "Julien Garnier", email: "julien.garnier@example.com" },
+    ].map((data) => prisma.user.create({ data })),
+  );
 
-  const enrollments = [
-    { study: studies[0], participant: participants[0], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[0], participant: participants[1], status: EnrollmentStatus.WAITLISTED },
-    { study: studies[1], participant: participants[2], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[1], participant: participants[3], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[2], participant: participants[0], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[2], participant: participants[4], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[2], participant: participants[5], status: EnrollmentStatus.WAITLISTED },
-    { study: studies[3], participant: participants[1], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[4], participant: participants[3], status: EnrollmentStatus.WAITLISTED },
-    { study: studies[4], participant: participants[5], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[5], participant: participants[2], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[6], participant: participants[0], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[6], participant: participants[4], status: EnrollmentStatus.WAITLISTED },
-    { study: studies[7], participant: participants[6], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[7], participant: participants[7], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[7], participant: participants[8], status: EnrollmentStatus.CONFIRMED },
-    { study: studies[7], participant: participants[9], status: EnrollmentStatus.WAITLISTED },
-  ]
+  const applications = [
+    {
+      program: programs[0],
+      user: users[0],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[0],
+      user: users[1],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[1],
+      user: users[2],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[1],
+      user: users[3],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[2],
+      user: users[0],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[2],
+      user: users[4],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[3],
+      user: users[1],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[3],
+      user: users[5],
+      status: ApplicationStatus.WAITLISTED,
+    },
+    {
+      program: programs[4],
+      user: users[3],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[5],
+      user: users[2],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[6],
+      user: users[0],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[6],
+      user: users[4],
+      status: ApplicationStatus.WAITLISTED,
+    },
+    {
+      program: programs[7],
+      user: users[6],
+      status: ApplicationStatus.CONFIRMED,
+    },
+    {
+      program: programs[7],
+      user: users[7],
+      status: ApplicationStatus.CONFIRMED,
+    },
+  ];
 
-  for (const { study, participant, status } of enrollments) {
-    await prisma.enrollment.create({
+  for (const { program, user, status } of applications) {
+    await prisma.application.create({
       data: {
-        studyId: study.id,
-        participantId: participant.id,
+        programId: program.id,
+        userId: user.id,
         status,
       },
-    })
+    });
   }
 
   console.log(
-    `Seed terminé : ${studies.length} études, ${participants.length} participants, ${enrollments.length} inscriptions.`,
-  )
+    `Seed terminé : ${programs.length} dispositifs, ${users.length} usagers, ${applications.length} demandes.`,
+  );
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
+
