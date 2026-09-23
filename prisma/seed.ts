@@ -50,7 +50,7 @@ async function main() {
         startDate: inDays(25),
         endDate: inDays(60),
         category: "Emploi",
-        capacity: 30,
+        capacity: 2,
       },
       {
         name: "Atelier découverte des métiers",
