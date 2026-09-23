@@ -48,7 +48,7 @@ function periodRange(period: Period): { gte: Date; lt: Date } | null {
   }
 
   if (period === "month") {
-    return { gte: from, lt: addDays(from, 7) };
+    return { gte: from, lt: addMonths(from, 1) };
   }
 
   return null;
@@ -151,7 +151,7 @@ export default async function Home({
                 </p>
 
                 <Link
-                  href="/programs/cmuelvpks0000unowl35nckcx"
+                  href={`/programs/${program.id}`}
                   className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-80"
                 >
                   Voir le détail

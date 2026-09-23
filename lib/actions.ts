@@ -75,6 +75,7 @@ export async function createApplication(
       const confirmedCount = await tx.application.count({
         where: {
           programId,
+          status: "CONFIRMED",
         },
       });
 
