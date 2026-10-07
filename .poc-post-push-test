@@ -3,3 +3,4 @@ test hook
 post-push test 3
 post-push test 4
 post-push test 5
+post-push test 6
